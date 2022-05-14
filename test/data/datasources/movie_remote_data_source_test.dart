@@ -8,8 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 
-import '../../json_reader.dart';
 import '../../helpers/test_helper.mocks.dart';
+import '../../json_reader.dart';
 
 void main() {
   const API_KEY = 'api_key=2174d146bb9c0eab47529b2e77d6b526';

@@ -34,7 +34,7 @@ class TvShowModel extends Equatable {
         backdropPath: json["backdrop_path"],
         genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
         id: json["id"],
-        originalTitle: json["name"],
+        originalTitle: json["name"] == null ? "" : json["name"],
         overview: json["overview"],
         popularity: json["popularity"].toDouble(),
         posterPath: json["poster_path"],

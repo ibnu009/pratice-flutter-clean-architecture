@@ -55,7 +55,7 @@ class TvShowDetailResponse extends Equatable {
           id: json["id"],
           imdbId: json["imdb_id"],
           originalLanguage: json["original_language"],
-          originalTitle: json["original_name"],
+          originalTitle: json["name"],
           overview: json["overview"],
           popularity: json["popularity"].toDouble(),
           posterPath: json["poster_path"],

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/exception.dart';
@@ -27,6 +28,7 @@ class TvShowRemoteDataSourceImpl implements TvShowRemoteDataSource {
     await client.get(Uri.parse('$BASE_URL/tv/airing_today?$API_KEY'));
 
     if (response.statusCode == 200) {
+      log(response.body);
       return TvShowResponse.fromJson(json.decode(response.body)).tvShowList;
     } else {
       throw ServerException();
