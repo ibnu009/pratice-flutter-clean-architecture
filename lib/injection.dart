@@ -1,3 +1,4 @@
+import 'package:ditonton/common/security/http_ssl_pinning.dart';
 import 'package:ditonton/data/datasources/db/database_helper.dart';
 import 'package:ditonton/data/datasources/movie_local_data_source.dart';
 import 'package:ditonton/data/datasources/movie_remote_data_source.dart';
@@ -27,6 +28,13 @@ import 'package:ditonton/domain/usecases/tv/get_watchlist_tv_shows.dart';
 import 'package:ditonton/domain/usecases/tv/remove_watchlist.dart';
 import 'package:ditonton/domain/usecases/tv/save_watchlist.dart';
 import 'package:ditonton/domain/usecases/tv/search_tv_shows.dart';
+import 'package:ditonton/presentation/bloc/movie/detail/detail_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/now_playing/now_playing_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/popular/popular_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/recomendation/recomendation_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/search/search_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/top_rated/top_rated_movie_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie/watchlist/watchlist_movie_bloc.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
@@ -38,7 +46,7 @@ import 'package:ditonton/presentation/provider/tv_show_list_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_show_search_notifier.dart';
 import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
 import 'package:get_it/get_it.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 import 'presentation/provider/top_rated_tv_show_notifier.dart';
 import 'presentation/provider/watchlist_tv_show_notifier.dart';
@@ -46,6 +54,23 @@ import 'presentation/provider/watchlist_tv_show_notifier.dart';
 final locator = GetIt.instance;
 
 void init() {
+
+  //bloc
+  locator.registerFactory(() => MoviePopularBloc(locator()));
+  locator.registerFactory(() => MovieTopRatedBloc(locator()));
+  locator.registerFactory(() => MovieNowPlayingBloc(locator()));
+  locator.registerFactory(() => MovieRecommendationBloc(locator()));
+  locator.registerFactory(() => MovieDetailBloc(locator()));
+
+  locator.registerFactory(() => MovieSearchBloc(locator()));
+
+  locator.registerFactory(() => MovieWatchListBloc(
+    locator(),
+    locator(),
+    locator(),
+    locator(),
+  ));
+
   // provider
   locator.registerFactory(
     () => MovieListNotifier(
@@ -168,5 +193,5 @@ void init() {
   locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
 
   // external
-  locator.registerLazySingleton(() => http.Client());
+  locator.registerLazySingleton(() => HttpSSLPinning.client);
 }

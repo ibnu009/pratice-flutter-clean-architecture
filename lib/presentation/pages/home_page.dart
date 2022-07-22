@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
@@ -141,8 +142,10 @@ class _HomePageState extends State<HomePage> {
         }),
         _buildSubHeading(
           title: 'Popular Movies',
-          onTap: () =>
-              Navigator.pushNamed(context, PopularMoviesPage.ROUTE_NAME),
+          onTap: () {
+             // FirebaseCrashlytics.instance.crash();
+           return Navigator.pushNamed(context, PopularMoviesPage.ROUTE_NAME);
+          },
         ),
         Consumer<MovieListNotifier>(builder: (context, data, child) {
           final state = data.popularMoviesState;
