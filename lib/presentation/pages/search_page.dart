@@ -3,7 +3,9 @@ import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/bloc/movie/search/search_movie_bloc.dart';
 import 'package:ditonton/presentation/bloc/movie/search/search_movie_event.dart';
 import 'package:ditonton/presentation/bloc/movie/search/search_movie_state.dart';
-import 'package:ditonton/presentation/provider/tv_show_search_notifier.dart';
+import 'package:ditonton/presentation/bloc/tv/search/search_tv_show_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/search/search_tv_show_event.dart';
+import 'package:ditonton/presentation/bloc/tv/search/search_tv_show_state.dart';
 import 'package:ditonton/presentation/widgets/movie_card_list.dart';
 import 'package:ditonton/presentation/widgets/tv_show_card_list.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +35,8 @@ class SearchPage extends StatelessWidget {
                   BlocProvider.of<MovieSearchBloc>(context, listen: false)
                       .add(OnSearchMovieEvent(query));
                 } else {
-                  Provider.of<TvShowSearchNotifier>(context, listen: false)
-                      .fetchTvShowSearch(query);
+                  BlocProvider.of<TvShowSearchBloc>(context, listen: false)
+                      .add(OnSearchTvShowEvent(query));
                 }
               },
               decoration: InputDecoration(
@@ -106,29 +108,38 @@ class SearchTvShowResult extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TvShowSearchNotifier>(
-      builder: (context, data, child) {
-        if (data.state == RequestState.Loading) {
-          return Center(
-            child: CircularProgressIndicator(),
+    return BlocBuilder<TvShowSearchBloc, TvShowSearchState>(
+      builder: (context, state) {
+        print('state is $state');
+        if (state is TvShowSearchLoadingState) {
+          return Expanded(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           );
-        } else if (data.state == RequestState.Loaded) {
-          final result = data.searchResult;
+        }
+
+        if (state is TvShowSearchHasDataState) {
+          final result = state.tvShows;
           return Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
-                final tvShow = data.searchResult[index];
+                final tvShow = result[index];
                 return TvShowCard(tvShow);
               },
               itemCount: result.length,
             ),
           );
-        } else {
+        }
+
+        if (state is TvShowSearchEmptyState){
           return Expanded(
-            child: Container(),
+            child: Center(child: Text("No Data")),
           );
         }
+
+        return SizedBox();
       },
     );
   }

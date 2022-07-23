@@ -1,9 +1,9 @@
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/popular_tv_shows_notifier.dart';
-import 'package:ditonton/presentation/widgets/movie_card_list.dart';
+import 'package:ditonton/presentation/bloc/tv/popular/popular_tv_show_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/popular/popular_tv_show_event.dart';
+import 'package:ditonton/presentation/bloc/tv/popular/popular_tv_show_state.dart';
 import 'package:ditonton/presentation/widgets/tv_show_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class PopularTvShowsPage extends StatefulWidget {
@@ -18,8 +18,8 @@ class _PopularTvShowsPageState extends State<PopularTvShowsPage> {
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<PopularTvShowsNotifier>(context, listen: false)
-            .fetchPopularTvShows());
+        Provider.of<TvShowPopularBloc>(context, listen: false)
+            .add(OnGetTvShowPopularEvent()));
   }
 
   @override
@@ -30,26 +30,39 @@ class _PopularTvShowsPageState extends State<PopularTvShowsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<PopularTvShowsNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<TvShowPopularBloc, TvShowPopularState>(
+          builder: (context, state) {
+            if (state is TvShowPopularLoadingState) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            }
+
+            if (state is TvShowPopularHasDataState) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tvShow = data.tvShows[index];
-                  return TvShowCard(tvShow);
+                  final movie = state.tvShows[index];
+                  return TvShowCard(movie);
                 },
-                itemCount: data.tvShows.length,
-              );
-            } else {
-              return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
+                itemCount: state.tvShows.length,
               );
             }
+
+            if (state is TvShowPopularEmptyState){
+              return Center(
+                key: Key('empty_message'),
+                child: Text("Popular tv shows is empty!"),
+              );
+            }
+
+            if (state is TvShowPopularErrorState) {
+              return Center(
+                key: Key('error_message'),
+                child: Text(state.message),
+              );
+            }
+
+            return SizedBox();
           },
         ),
       ),

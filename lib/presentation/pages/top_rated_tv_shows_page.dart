@@ -1,9 +1,11 @@
 import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/top_rated_tv_show_notifier.dart';
+import 'package:ditonton/presentation/bloc/tv/top_rated/top_rated_tv_show_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv/top_rated/top_rated_tv_show_event.dart';
+import 'package:ditonton/presentation/bloc/tv/top_rated/top_rated_tv_show_state.dart';
 import 'package:ditonton/presentation/widgets/movie_card_list.dart';
 import 'package:ditonton/presentation/widgets/tv_show_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class TopRatedTvShowsPage extends StatefulWidget {
@@ -18,8 +20,8 @@ class _TopRatedTvShowsPageState extends State<TopRatedTvShowsPage> {
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<TopRatedTvShowsNotifier>(context, listen: false)
-            .fetchTopRatedTvShows());
+        BlocProvider.of<TvShowTopRatedBloc>(context, listen: false)
+            .add(OnGetTvShowTopRatedEvent()));
   }
 
   @override
@@ -30,26 +32,32 @@ class _TopRatedTvShowsPageState extends State<TopRatedTvShowsPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<TopRatedTvShowsNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<TvShowTopRatedBloc, TvShowTopRatedState>(
+          builder: (context, state) {
+            if (state is TvShowTopRatedLoadingState) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            }
+
+            if (state is TvShowTopRatedHasDataState) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tvShow = data.tvShows[index];
-                  return TvShowCard(tvShow);
+                  final movie = state.tvShows[index];
+                  return TvShowCard(movie);
                 },
-                itemCount: data.tvShows.length,
-              );
-            } else {
-              return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
+                itemCount: state.tvShows.length,
               );
             }
+
+            if (state is TvShowTopRatedErrorState) {
+              return Center(
+                key: Key('error_message'),
+                child: Text(state.message),
+              );
+            }
+
+            return SizedBox();
           },
         ),
       ),
