@@ -25,12 +25,9 @@ void main() {
   final tId = 1;
 
   group('Movie Detail Bloc Testing', () {
-    test('initial state should be empty', () {
-      expect(bloc.state, MovieDetailEmptyState());
-    });
 
     blocTest<MovieDetailBloc, MovieDetailState>(
-      'Should emit [Loading, HasData] when data is gotten successfully',
+      'Should emit "Loading" and then "HasData" when data is gotten successfully',
       build: () {
         when(mockGetMovieDetail.execute(tId))
             .thenAnswer((_) async => Right(testMovieDetail));
@@ -48,7 +45,7 @@ void main() {
     );
 
     blocTest<MovieDetailBloc, MovieDetailState>(
-      'Should emit [Loading, Error] when data is unsucessful to fetch',
+      'Should emit "Loading" and then "Error" when data is failed to fetch',
       build: () {
         when(mockGetMovieDetail.execute(tId))
             .thenAnswer((_) async => Left(ServerFailure('Server Failure')));

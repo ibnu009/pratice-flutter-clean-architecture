@@ -1,13 +1,10 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:ditonton/domain/usecases/movie/get_movie_recommendations.dart';
 import 'package:ditonton/domain/usecases/movie/get_watchlist_movies.dart';
 import 'package:ditonton/domain/usecases/movie/get_watchlist_status.dart';
 import 'package:ditonton/domain/usecases/movie/remove_watchlist.dart';
 import 'package:ditonton/domain/usecases/movie/save_watchlist.dart';
-import 'package:ditonton/presentation/bloc/movie/recomendation/recomendation_movie_event.dart';
-import 'package:ditonton/presentation/bloc/movie/recomendation/recomendation_movie_state.dart';
 import 'package:ditonton/presentation/bloc/movie/watchlist/watchlist_movie_event.dart';
 import 'package:ditonton/presentation/bloc/movie/watchlist/watchlist_movie_state.dart';
 
@@ -41,6 +38,7 @@ class MovieWatchListBloc
     result.fold((failure) {
       emit(MovieWatchListErrorState(failure.message));
     }, (success) {
+      print("Data is $success");
       success.isNotEmpty
           ? emit(MovieWatchListHasDataState(success))
           : emit(MovieWatchListEmptyState());

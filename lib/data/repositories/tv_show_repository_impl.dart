@@ -26,6 +26,8 @@ class TvShowRepositoryImpl implements TvShowRepository {
       return Left(ServerFailure('Server Error'));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException{
+      return Left(SSLFailure('Failed to verify certificate'));
     }
   }
 
@@ -38,6 +40,8 @@ class TvShowRepositoryImpl implements TvShowRepository {
       return Left(ServerFailure('Server Error'));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException{
+      return Left(SSLFailure('Failed to verify certificate'));
     }
   }
 
@@ -50,6 +54,8 @@ class TvShowRepositoryImpl implements TvShowRepository {
       return Left(ServerFailure('Server Error'));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException{
+      return Left(SSLFailure('Failed to verify certificate'));
     }
   }
 
@@ -62,6 +68,8 @@ class TvShowRepositoryImpl implements TvShowRepository {
       return Left(ServerFailure('Server Error'));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException{
+      return Left(SSLFailure('Failed to verify certificate'));
     }
   }
 
@@ -71,9 +79,11 @@ class TvShowRepositoryImpl implements TvShowRepository {
       final result = await remoteDataSource.getTvShowRecommendations(id);
       return Right(result.map((model) => model.toEntity()).toList());
     } on ServerException {
-      return Left(ServerFailure(''));
+      return Left(ServerFailure('Server Error'));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException{
+      return Left(SSLFailure('Failed to verify certificate'));
     }
   }
 
@@ -119,9 +129,11 @@ class TvShowRepositoryImpl implements TvShowRepository {
       final result = await remoteDataSource.searchTvShows(query);
       return Right(result.map((model) => model.toEntity()).toList());
     } on ServerException {
-      return Left(ServerFailure(''));
+      return Left(ServerFailure('Server Error'));
     } on SocketException {
       return Left(ConnectionFailure('Failed to connect to the network'));
+    } on TlsException{
+      return Left(SSLFailure('Failed to verify certificate'));
     }
   }
 }

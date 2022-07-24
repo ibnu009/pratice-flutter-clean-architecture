@@ -43,6 +43,11 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<MovieDetailBloc, MovieDetailState>(

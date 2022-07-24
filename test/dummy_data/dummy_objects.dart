@@ -69,10 +69,17 @@ final testTvShowDetail = TvShowDetail(
   title: 'title',
   voteAverage: 1,
   voteCount: 1,
-  numberOfEpisodes: 60,
+  numberOfEpisodes: 12,
 );
 
 final testWatchlistMovie = Movie.watchlist(
+  id: 1,
+  title: 'title',
+  posterPath: 'posterPath',
+  overview: 'overview',
+);
+
+final testWatchlistTvShow = TvShow.watchlist(
   id: 1,
   title: 'title',
   posterPath: 'posterPath',

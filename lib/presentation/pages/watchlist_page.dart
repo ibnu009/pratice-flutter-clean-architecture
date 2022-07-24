@@ -29,6 +29,12 @@ class _WatchlistPageState extends State<WatchlistPage>
     _fetchMovieWatchList();
   }
 
+  void didPopNext() {
+    _selectedType == watchListMovieType ?
+    _fetchMovieWatchList():
+    _fetchTvShowWatchList();
+  }
+
   void _fetchMovieWatchList(){
     Future.microtask(() =>
         Provider.of<MovieWatchListBloc>(context, listen: false)

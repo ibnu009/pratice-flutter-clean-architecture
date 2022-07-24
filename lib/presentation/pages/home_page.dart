@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/tv_show.dart';
 import 'package:ditonton/presentation/bloc/movie/now_playing/now_playing_movie_bloc.dart';
@@ -153,8 +152,13 @@ class _HomePageState extends State<HomePage> {
               child: CircularProgressIndicator(),
             );
           }
+
           if (state is MovieNowPlayingHasDataState) {
             return MovieList(state.result);
+          }
+
+          if (state is MovieNowPlayingErrorState) {
+            return Text(state.message);
           }
           return Text('Failed');
         }),
@@ -176,6 +180,10 @@ class _HomePageState extends State<HomePage> {
               if (state is MoviePopularHasDataState) {
                 return MovieList(state.movies);
               }
+              if (state is MoviePopularErrorState) {
+                return Text(state.message);
+              }
+
               return Text('Failed');
             }),
 
@@ -193,6 +201,9 @@ class _HomePageState extends State<HomePage> {
               }
               if (state is MovieTopRatedHasDataState) {
                 return MovieList(state.movies);
+              }
+              if (state is MovieTopRatedErrorState) {
+                return Text(state.message);
               }
               return Text('Failed');
             }),
@@ -218,6 +229,9 @@ class _HomePageState extends State<HomePage> {
               if (state is TvShowNowPlayingHasDataState) {
                 return TvShowList(state.tvShows);
               }
+              if (state is TvShowNowPlayingErrorState){
+                return Text(state.message);
+              }
               return Text('Failed');
             }),
 
@@ -237,6 +251,10 @@ class _HomePageState extends State<HomePage> {
                 return TvShowList(state.tvShows);
               }
 
+              if (state is TvShowPopularErrorState){
+                return Text(state.message);
+              }
+
               return Text('Failed');
             }),
 
@@ -254,6 +272,9 @@ class _HomePageState extends State<HomePage> {
               }
               if (state is TvShowTopRatedHasDataState) {
                 return TvShowList(state.tvShows);
+              }
+              if (state is TvShowTopRatedErrorState){
+                return Text(state.message);
               }
               return Text('Failed');
             }),
