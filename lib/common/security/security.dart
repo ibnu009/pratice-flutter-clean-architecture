@@ -11,7 +11,7 @@ class Security {
     SecurityContext context = SecurityContext(withTrustedRoots: false);
     try {
       List<int> bytes = [];
-      bytes = (await rootBundle.load('certificates/moviedb_certificate.pem'))
+      bytes = (await rootBundle.load('certificates/themoviedb.org.cer'))
           .buffer
           .asUint8List();
       context.setTrustedCertificatesBytes(bytes);
